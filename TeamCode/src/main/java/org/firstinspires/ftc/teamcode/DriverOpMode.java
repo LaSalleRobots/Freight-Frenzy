@@ -76,30 +76,6 @@ public class DriverOpMode extends LinearOpMode {
             telemetry.addData("Back Left", blP);
             telemetry.addData("Back Right", brP);
 
-            // Other input code
-            if (gamepad1.a) {
-                intake.setPower(1);
-            } else if (gamepad1.b) {
-                intake.setPower(-1);
-            } else {
-                intake.setPower(0);
-            }
-
-            // right trigger logic (linear trigger logic)
-            if (gamepad1.right_trigger > 0.2) {
-                launcherLeft.setPower(-1);
-                launcherRight.setPower(1);
-                if (gamepad1.right_trigger > 0.8) {
-                    trigger.setPosition(1);
-                } else {
-                    trigger.setPosition(0);
-                }
-            } else {
-                launcherLeft.setPower(0);
-                launcherRight.setPower(0);
-                trigger.setPosition(0);
-            }
-
             telemetry.update();
         }
     }
