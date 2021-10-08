@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Driver Controlled (Robot Centric)", group = "Driver")
+@TeleOp(name = "Driver Controlled (Robot Centric) 2021", group = "Driver")
 public class DriverOpMode extends LinearOpMode {
 
     private double getGamepadMoveMagnitude(Gamepad gamepad) {
@@ -29,11 +29,6 @@ public class DriverOpMode extends LinearOpMode {
         DcMotor fR = hardwareMap.get(DcMotor.class, "fR"); // Front Right
         DcMotor bR = hardwareMap.get(DcMotor.class, "bR"); // Back  Right
 
-        DcMotor intake = hardwareMap.get(DcMotor.class, "intake"); // Intake Motor
-        DcMotor launcherLeft = hardwareMap.get(DcMotor.class, "launchL"); // Launch Left
-        DcMotor launcherRight = hardwareMap.get(DcMotor.class, "launchR"); // Launch Right
-
-        Servo trigger = hardwareMap.get(Servo.class, "trigger"); // Launch ring pusher
 
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
         bL.setDirection(DcMotorSimple.Direction.REVERSE);
