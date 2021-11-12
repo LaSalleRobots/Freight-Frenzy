@@ -13,7 +13,6 @@ RoboHelper robot = new RoboHelper(hardwareMap, runtime);
 ### Methods
 Basic Methods
 - `sleep(s)` waits for the given time in seconds
-- `togglePlateGrabber()` toggles the position of the plate grabber
 - `powerOff()` turns the motors off
 - `applyPower()` useful when using custom power settings and you need to apply them to the motors
 - `runFor(s) RobotHelper` runs any previous motor positions for given time in seconds and returns itself for more chaining
