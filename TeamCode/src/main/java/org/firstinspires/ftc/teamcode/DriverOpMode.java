@@ -30,6 +30,11 @@ public class DriverOpMode extends LinearOpMode {
         DcMotor bR = hardwareMap.get(DcMotor.class, "bR"); // Back  Right
 
 
+        DcMotor carousel = hardwareMap.get(DcMotor.class, "spinnyMaGig"); // carousel
+
+
+
+
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
         bL.setDirection(DcMotorSimple.Direction.REVERSE);
         fR.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -64,6 +69,13 @@ public class DriverOpMode extends LinearOpMode {
                             * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
                             - getGamepadTurnMagnitude(gamepad1);
             bR.setPower(brP);
+
+            if (gamepad1.left_bumper) {
+                carousel.setPower(-1);
+            } else {
+                carousel.setPower(0);
+            }
+
 
             // Mechanum movement telemetry
             telemetry.addData("Front Left", flP);
