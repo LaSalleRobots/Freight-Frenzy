@@ -29,6 +29,8 @@ public class RoboHelper {
     private double frP = 0;
     private double brP = 0;
 
+    public double speedScale = 1; // keep between 0 and 1
+
     // setup class initializer
     public RoboHelper(HardwareMap hardwareMap, ElapsedTime runtime) {
         this.runtime = runtime;
@@ -38,7 +40,7 @@ public class RoboHelper {
         this.rightFront = hardwareMap.get(DcMotor.class, "fR");
         this.leftBack = hardwareMap.get(DcMotor.class, "bL");
         this.rightBack = hardwareMap.get(DcMotor.class, "bR");
-		this.plateSpinner = hardwareMap.get(DcMotor.class, "thingyMaGig");
+		this.plateSpinner = hardwareMap.get(DcMotor.class, "spinnyMaGig");
 
         // Set Directions
         this.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -82,19 +84,19 @@ public class RoboHelper {
 
     public RoboHelper calculateDirections(double x, double y, double turn) {
         this.flP =
-                magnitude(x,y)
+                speedScale * magnitude(x,y)
                         * Math.sin(angle(x,y) + (Math.PI / 4))
                         + turn;
         this.blP =
-                magnitude(x,y)
+                speedScale * magnitude(x,y)
                         * Math.sin(angle(x,y) - (Math.PI / 4))
                         + turn;
         this.frP =
-                magnitude(x,y)
+                speedScale * magnitude(x,y)
                         * Math.sin(angle(x,y) + (Math.PI / 4))
                         - turn;
        this. brP =
-                magnitude(x,y)
+                speedScale * magnitude(x,y)
                         * Math.sin(angle(x,y) - (Math.PI / 4))
                         - turn;
         return this;
@@ -150,7 +152,7 @@ public class RoboHelper {
     }
 
     public RoboHelper moveBackwards() {
-        calculateDirections(0, -1, 0);
+        calculateDirections(0, 1, 0);
         applyPower();
         return this;
     }
@@ -204,7 +206,7 @@ public class RoboHelper {
     }
 
 	public RoboHelper startSpinner() {
-		this.plateSpinner.setPower(0.1);
+		this.plateSpinner.setPower(1);
 		return this;
 	}
 
