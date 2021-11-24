@@ -49,26 +49,26 @@ public class DriverOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Mechanum movement input code
-            flP =
-                    getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) + (Math.PI / 4))
-                            + getGamepadTurnMagnitude(gamepad1);
-            fL.setPower(flP);
             blP =
                     getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
-                            + getGamepadTurnMagnitude(gamepad1);
-            bL.setPower(blP);
-            frP =
-                    getGamepadMoveMagnitude(gamepad1)
                             * Math.sin(getGamepadMoveAngle(gamepad1) + (Math.PI / 4))
-                            - getGamepadTurnMagnitude(gamepad1);
-            fR.setPower(frP);
+                            + getGamepadTurnMagnitude(gamepad1); // flP
+            bL.setPower(blP);
+            flP =
+                    getGamepadMoveMagnitude(gamepad1)
+                            * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
+                            + getGamepadTurnMagnitude(gamepad1); // blP
+            fL.setPower(flP);
             brP =
                     getGamepadMoveMagnitude(gamepad1)
+                            * Math.sin(getGamepadMoveAngle(gamepad1) + (Math.PI / 4))
+                            - getGamepadTurnMagnitude(gamepad1); // frP
+            fR.setPower(brP);
+            frP =
+                    getGamepadMoveMagnitude(gamepad1)
                             * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
-                            - getGamepadTurnMagnitude(gamepad1);
-            bR.setPower(brP);
+                            - getGamepadTurnMagnitude(gamepad1); // brP
+            fR.setPower(frP);
 
             if (gamepad1.left_bumper) {
                 carousel.setPower(-1);

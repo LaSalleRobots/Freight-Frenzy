@@ -12,13 +12,6 @@ public class OpenCV_Example extends LinearOpMode {
         OpenCVPipelineRunner runner = new OpenCVPipelineRunner(hardwareMap, teamElementTracker);
 
         runner.start();
-
-        switch (teamElementTracker.getPosition()) {
-            case Left:
-                
-
-        }
-
         while (opModeIsActive()) {
             telemetry.addData("FPS", runner.phoneCam.getFps());
             telemetry.addData("Pipeline (ms)", runner.phoneCam.getPipelineTimeMs());
