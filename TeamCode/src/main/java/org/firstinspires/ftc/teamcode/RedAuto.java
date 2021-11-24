@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "MinimumViableProduct", group = "Pre-Programed")
-public class MinimumViableProduct extends LinearOpMode {
+@Autonomous(name = "Red Autonomous", group = "Pre-Programed")
+public class RedAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
