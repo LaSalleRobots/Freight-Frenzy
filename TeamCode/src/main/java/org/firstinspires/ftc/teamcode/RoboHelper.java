@@ -21,6 +21,8 @@ public class RoboHelper {
     private DcMotor leftBack = null;
     private DcMotor rightBack = null;
 	private DcMotor plateSpinner = null;
+	private DcMotor gripperLeft = null;
+	private DcMotor gripperRight = null;
 
     private double fixionCoef = 1.75; // the distance the robot goes in 1 second (in feet)
 
@@ -41,6 +43,8 @@ public class RoboHelper {
         this.leftBack = hardwareMap.get(DcMotor.class, "bL");
         this.rightBack = hardwareMap.get(DcMotor.class, "bR");
 		this.plateSpinner = hardwareMap.get(DcMotor.class, "spinnyMaGig");
+		this.gripperLeft = hardwareMap.get(DcMotor.class, "gripperLeft");
+		this.gripperRight = hardwareMap.get(DcMotor.class, "gripperRight");
 
         // Set Directions
         this.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -48,6 +52,8 @@ public class RoboHelper {
         this.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         this.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
 		this.plateSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
+		this.gripperLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+		this.gripperRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /*
@@ -214,4 +220,22 @@ public class RoboHelper {
 		this.plateSpinner.setPower(0);
 		return this;
 	}
+
+	public RoboHelper gripperClose() {
+        this.gripperLeft.setPower(1);
+        this.gripperRight.setPower(1);
+        this.sleep(0.05);
+        this.gripperLeft.setPower(0);
+        this.gripperRight.setPower(0);
+        return this;
+    }
+
+    public RoboHelper gripperOpen() {
+        this.gripperLeft.setPower(-1);
+        this.gripperRight.setPower(-1);
+        this.sleep(0.25);
+        this.gripperLeft.setPower(0);
+        this.gripperRight.setPower(0);
+        return this;
+    }
 }
