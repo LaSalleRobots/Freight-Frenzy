@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Driver Controlled (Robot Centric) 2021", group = "Driver")
 public class DriverOpMode extends LinearOpMode {
@@ -24,64 +25,45 @@ public class DriverOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor fL = hardwareMap.get(DcMotor.class, "fL"); // Front Left
-        DcMotor bL = hardwareMap.get(DcMotor.class, "bL"); // Back  Left
-        DcMotor fR = hardwareMap.get(DcMotor.class, "fR"); // Front Right
-        DcMotor bR = hardwareMap.get(DcMotor.class, "bR"); // Back  Right
 
-
-        DcMotor carousel = hardwareMap.get(DcMotor.class, "spinnyMaGig"); // carousel
-
-
-
-
-        fL.setDirection(DcMotorSimple.Direction.REVERSE);
-        bL.setDirection(DcMotorSimple.Direction.REVERSE);
-        fR.setDirection(DcMotorSimple.Direction.FORWARD);
-        bR.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        double flP = 0;
-        double blP = 0;
-        double frP = 0;
-        double brP = 0;
+        DcMotor swing = hardwareMap.get(DcMotor.class, "swing");
+        swing.setDirection(DcMotorSimple.Direction.FORWARD);
+        ElapsedTime time = new ElapsedTime();
+        RoboHelper robot = new RoboHelper(hardwareMap, time);
 
         waitForStart();
 
+        Debouncer debouncer = new Debouncer(.2);
+
+
         while (opModeIsActive()) {
-            // Mechanum movement input code
-            blP =
-                    getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) + (Math.PI / 4))
-                            + getGamepadTurnMagnitude(gamepad1); // flP
-            bL.setPower(blP);
-            flP =
-                    getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
-                            + getGamepadTurnMagnitude(gamepad1); // blP
-            fL.setPower(flP);
-            brP =
-                    getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) + (Math.PI / 4))
-                            - getGamepadTurnMagnitude(gamepad1); // frP
-            fR.setPower(brP);
-            frP =
-                    getGamepadMoveMagnitude(gamepad1)
-                            * Math.sin(getGamepadMoveAngle(gamepad1) - (Math.PI / 4))
-                            - getGamepadTurnMagnitude(gamepad1); // brP
-            fR.setPower(frP);
+            robot.handleGamepads(gamepad1, gamepad2);
 
             if (gamepad1.left_bumper) {
-                carousel.setPower(-1);
+                robot.startSpinnerOther();
             } else {
-                carousel.setPower(0);
+                robot.stopSpinner();
+            }
+            if (gamepad1.right_bumper) {
+                robot.startSpinner();
+            } else {
+                robot.stopSpinner();
             }
 
+            if (debouncer.isPressed(gamepad1.a)) {
+                robot.gripperToggle();
+            }
 
-            // Mechanum movement telemetry
-            telemetry.addData("Front Left", flP);
-            telemetry.addData("Front Right", frP);
-            telemetry.addData("Back Left", blP);
-            telemetry.addData("Back Right", brP);
+            if (gamepad1.dpad_up) {
+                swing.setPower(0.5);
+            } else {
+                swing.setPower(0);
+            }
+            if (gamepad1.dpad_down) {
+                swing.setPower(-0.5);
+            } else {
+                swing.setPower(0);
+            }
 
             telemetry.update();
         }

@@ -30,6 +30,8 @@ public class RoboHelper {
     private double blP = 0;
     private double frP = 0;
     private double brP = 0;
+    private boolean gripperState = false;
+    private boolean gripperTransitioning = false;
 
     public double speedScale = 1; // keep between 0 and 1
 
@@ -42,7 +44,7 @@ public class RoboHelper {
         this.rightFront = hardwareMap.get(DcMotor.class, "fR");
         this.leftBack = hardwareMap.get(DcMotor.class, "bL");
         this.rightBack = hardwareMap.get(DcMotor.class, "bR");
-		this.plateSpinner = hardwareMap.get(DcMotor.class, "spinnyMaGig");
+		this.plateSpinner = hardwareMap.get(DcMotor.class, "spinner");
 		this.gripperLeft = hardwareMap.get(DcMotor.class, "gripperLeft");
 		this.gripperRight = hardwareMap.get(DcMotor.class, "gripperRight");
 
@@ -89,22 +91,25 @@ public class RoboHelper {
     }
 
     public RoboHelper calculateDirections(double x, double y, double turn) {
-        this.flP =
-                speedScale * magnitude(x,y)
-                        * Math.sin(angle(x,y) + (Math.PI / 4))
-                        + turn;
+
         this.blP =
-                speedScale * magnitude(x,y)
-                        * Math.sin(angle(x,y) - (Math.PI / 4))
-                        + turn;
-        this.frP =
-                speedScale * magnitude(x,y)
+                magnitude(x,y)
                         * Math.sin(angle(x,y) + (Math.PI / 4))
-                        - turn;
-       this. brP =
-                speedScale * magnitude(x,y)
+                        + turn; // flP
+        this.flP =
+                magnitude(x,y)
                         * Math.sin(angle(x,y) - (Math.PI / 4))
-                        - turn;
+                        + turn; // blP
+
+        this.brP =
+                magnitude(x,y)
+                        * Math.sin(angle(x,y) + (Math.PI / 4))
+                        - turn; // frP
+        this.frP =
+                magnitude(x,y)
+                        * Math.sin(angle(x,y) - (Math.PI / 4))
+                        - turn; // brP
+
         return this;
     }
 
@@ -216,26 +221,50 @@ public class RoboHelper {
 		return this;
 	}
 
+	public RoboHelper startSpinnerOther() {
+        this.plateSpinner.setPower(-1);
+        return this;
+    }
+
 	public RoboHelper stopSpinner() {
 		this.plateSpinner.setPower(0);
 		return this;
 	}
 
 	public RoboHelper gripperClose() {
+        // prevent this from running while it is running.
+        while (gripperTransitioning) {}
+        gripperTransitioning=true;
         this.gripperLeft.setPower(1);
         this.gripperRight.setPower(1);
         this.sleep(0.05);
         this.gripperLeft.setPower(0);
         this.gripperRight.setPower(0);
+
+        gripperTransitioning=false;
         return this;
     }
 
     public RoboHelper gripperOpen() {
+        while (gripperTransitioning) {}
+        gripperTransitioning=true;
         this.gripperLeft.setPower(-1);
         this.gripperRight.setPower(-1);
         this.sleep(0.25);
         this.gripperLeft.setPower(0);
         this.gripperRight.setPower(0);
+        gripperTransitioning=false;
         return this;
     }
+
+    public RoboHelper gripperToggle() {
+        if (gripperState) {
+            gripperClose();
+        } else {
+            gripperOpen();
+        }
+        gripperState = !gripperState;
+        return this;
+    }
+
 }
