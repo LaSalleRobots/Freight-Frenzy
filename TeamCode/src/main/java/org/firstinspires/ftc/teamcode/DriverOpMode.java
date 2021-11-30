@@ -26,8 +26,6 @@ public class DriverOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor swing = hardwareMap.get(DcMotor.class, "swing");
-        swing.setDirection(DcMotorSimple.Direction.FORWARD);
         ElapsedTime time = new ElapsedTime();
         RoboHelper robot = new RoboHelper(hardwareMap, time);
 
@@ -55,14 +53,14 @@ public class DriverOpMode extends LinearOpMode {
             }
 
             if (gamepad1.dpad_up) {
-                swing.setPower(0.5);
+                robot.raiseArm();
             } else {
-                swing.setPower(0);
+                robot.stopArm();
             }
             if (gamepad1.dpad_down) {
-                swing.setPower(-0.5);
+                robot.lowerArm();
             } else {
-                swing.setPower(0);
+                robot.stopArm();
             }
 
             telemetry.update();
