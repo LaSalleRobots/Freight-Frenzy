@@ -240,7 +240,7 @@ public class RoboHelper {
         gripperTransitioning=true;
         this.gripperLeft.setPower(1);
         this.gripperRight.setPower(1);
-        this.sleep(0.05);
+        this.sleep(0.1);
         this.gripperLeft.setPower(0);
         this.gripperRight.setPower(0);
 
@@ -253,7 +253,7 @@ public class RoboHelper {
         gripperTransitioning=true;
         this.gripperLeft.setPower(-1);
         this.gripperRight.setPower(-1);
-        this.sleep(0.25);
+        this.sleep(0.1);
         this.gripperLeft.setPower(0);
         this.gripperRight.setPower(0);
         gripperTransitioning=false;
