@@ -28,6 +28,8 @@ public class RoboHelper {
 	private DcMotor gripperRight = null;
 	private DcMotor swing = null;
 
+	public BNO055IMU imu = null;
+
     private double fixionCoef = 1.75; // the distance the robot goes in 1 second (in feet)
 
     private double flP = 0;
@@ -62,6 +64,13 @@ public class RoboHelper {
 		this.gripperLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 		this.gripperRight.setDirection(DcMotorSimple.Direction.REVERSE);
 		this.swing.setDirection(DcMotorSimple.Direction.FORWARD);
+
+		// Setup sensors
+        this.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        //parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        this.imu.initialize(parameters);
     }
 
     /*
@@ -91,29 +100,65 @@ public class RoboHelper {
 
     // handleGamepads the second gamepad is currently ignored for this input code
     public RoboHelper handleGamepads(Gamepad gamepad1, Gamepad gamepad2) {
-        calculateDirections(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        calculateDirections(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, true);
         applyPower();
         return this;
     }
 
-    public RoboHelper calculateDirections(double x, double y, double turn) {
+    public RoboHelper calculateDirections(double x, double y, double turn, boolean field) {
+        if (field) {
+            calculateDirectionsFieldCentric(x,y,turn);
+        } else {
+            calculateDirectionsRobotCentric(x,y,turn);
+        }
+        return this;
+    }
+
+    public RoboHelper calculateDirectionsFieldCentric(double x, double y, double turn) {
+
+        double phi = (angle(x,y)-getHeading());
 
         this.blP =
                 magnitude(x,y)
-                        * Math.sin(angle(x,y) + (Math.PI / 4))
+                        * Math.sin( phi + (Math.PI / 4))
                         + turn; // flP
         this.flP =
                 magnitude(x,y)
-                        * Math.sin(angle(x,y) - (Math.PI / 4))
+                        * Math.sin(phi - (Math.PI / 4))
                         + turn; // blP
 
         this.brP =
                 magnitude(x,y)
-                        * Math.sin(angle(x,y) + (Math.PI / 4))
+                        * Math.sin(phi + (Math.PI / 4))
                         - turn; // frP
         this.frP =
                 magnitude(x,y)
-                        * Math.sin(angle(x,y) - (Math.PI / 4))
+                        * Math.sin(phi - (Math.PI / 4))
+                        - turn; // brP
+
+        return this;
+    }
+
+    public RoboHelper calculateDirectionsRobotCentric(double x, double y, double turn) {
+
+        double phi = (angle(x,y));
+
+        this.blP =
+                magnitude(x,y)
+                        * Math.sin( phi + (Math.PI / 4))
+                        + turn; // flP
+        this.flP =
+                magnitude(x,y)
+                        * Math.sin(phi - (Math.PI / 4))
+                        + turn; // blP
+
+        this.brP =
+                magnitude(x,y)
+                        * Math.sin(phi + (Math.PI / 4))
+                        - turn; // frP
+        this.frP =
+                magnitude(x,y)
+                        * Math.sin(phi - (Math.PI / 4))
                         - turn; // brP
 
         return this;
@@ -130,6 +175,11 @@ public class RoboHelper {
         while (time <= initTime + sleepTime) {
             time = runtime.time();
         }
+    }
+
+    public double getHeading() {
+        Orientation orientation = this.imu.getAngularOrientation();
+        return orientation.firstAngle;
     }
 
     public RoboHelper powerOff() {
@@ -167,61 +217,61 @@ public class RoboHelper {
     }
 
     public RoboHelper moveForwards() {
-        calculateDirections(0, -1, 0);
+        calculateDirections(0, -1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveBackwards() {
-        calculateDirections(0, 1, 0);
+        calculateDirections(0, 1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveLeft() {
-        calculateDirections(-1, 0, 0);
+        calculateDirections(-1, 0, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveRight() {
-        calculateDirections(1, 0, 0);
+        calculateDirections(1, 0, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveBackwardsLeft() {
-        calculateDirections(-1, -1, 0);
+        calculateDirections(-1, -1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveBackwardsRight() {
-        calculateDirections(1, -1, 0);
+        calculateDirections(1, -1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveForwardsLeft() {
-        calculateDirections(-1, 1, 0);
+        calculateDirections(-1, 1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper moveForwardsRight() {
-        calculateDirections(1, 1, 0);
+        calculateDirections(1, 1, 0, false);
         applyPower();
         return this;
     }
 
     public RoboHelper rotateLeft() {
-        calculateDirections(0, 0, -1);
+        calculateDirections(0, 0, -1, false);
         applyPower();
         return this;
     }
 
     public RoboHelper rotateRight() {
-        calculateDirections(0, 0, 1);
+        calculateDirections(0, 0, 1, false);
         applyPower();
         return this;
     }

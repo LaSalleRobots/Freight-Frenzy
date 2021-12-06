@@ -75,6 +75,7 @@ public class DriverOpMode extends LinearOpMode {
             }
 
             telemetry.addData("robot.speedScale", robot.speedScale);
+            telemetry.addData("robot.Orientation", robot.imu.getAngularOrientation());
 
             telemetry.update();
         }
