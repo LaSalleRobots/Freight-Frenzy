@@ -32,36 +32,49 @@ public class DriverOpMode extends LinearOpMode {
         waitForStart();
 
         Debouncer debouncer = new Debouncer(.2);
+        Debouncer psxDebouncer = new Debouncer(.2);
+        Debouncer speedDebouncer = new Debouncer(.4);
+        Debouncer psxSpeedDebouncer = new Debouncer(.4);
 
 
         while (opModeIsActive()) {
             robot.handleGamepads(gamepad1, gamepad2);
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper || gamepad2.left_bumper) {
                 robot.startSpinnerOther();
             } else {
                 robot.stopSpinner();
             }
-            if (gamepad1.right_bumper) {
+            if (gamepad1.right_bumper || gamepad2.right_bumper) {
                 robot.startSpinner();
             } else {
                 robot.stopSpinner();
             }
 
-            if (debouncer.isPressed(gamepad1.a)) {
+            if (debouncer.isPressed(gamepad1.a) || psxDebouncer.isPressed(gamepad2.cross) || psxDebouncer.isPressed(gamepad1.circle)) {
                 robot.gripperToggle();
             }
 
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 robot.raiseArm();
             } else {
                 robot.stopArm();
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 robot.lowerArm();
             } else {
                 robot.stopArm();
             }
+
+            if (speedDebouncer.isPressed(gamepad1.y) || psxSpeedDebouncer.isPressed(gamepad2.triangle)) {
+                if (robot.speedScale == 1) {
+                    robot.speedScale = 0.5;
+                } else {
+                    robot.speedScale = 1;
+                }
+            }
+
+            telemetry.addData("robot.speedScale", robot.speedScale);
 
             telemetry.update();
         }

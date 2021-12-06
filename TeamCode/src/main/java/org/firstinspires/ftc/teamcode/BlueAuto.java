@@ -11,13 +11,19 @@ public class BlueAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime runtime = new ElapsedTime();
         RoboHelper robot = new RoboHelper(hardwareMap, runtime);
-        robot.speedScale = 0.7;
 
         waitForStart();
 
-        robot.startSpinner().runFor(5).stopSpinner();
-        robot.moveBackwards().runFor(1.5);
-        robot.moveLeft().runFor(0.5);
+        robot.moveRight().runFor(0.1);
+        robot.moveBackwards().runFor(0.2);
+        robot.speedScale = 0.05;
+        for (int i = 0; i < 4; i++) {
+            robot.moveLeft();
+            robot.startSpinner().runFor(3.6);
+            robot.stopSpinner().runFor(0.7);
+        }
+        robot.speedScale = .4;
+        robot.moveRight().runFor(.2);
 
     }
 

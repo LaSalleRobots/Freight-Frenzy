@@ -5,11 +5,14 @@ package org.firstinspires.ftc.teamcode;
  * Developed for the Freight Frenzy competition
  */
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class RoboHelper {
 
@@ -130,6 +133,10 @@ public class RoboHelper {
     }
 
     public RoboHelper powerOff() {
+        flP = 0;
+        blP = 0;
+        frP = 0;
+        brP = 0;
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftBack.setPower(0);
