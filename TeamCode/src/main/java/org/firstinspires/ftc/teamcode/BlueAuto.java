@@ -15,7 +15,7 @@ public class BlueAuto extends LinearOpMode {
         waitForStart();
 
         robot.drive.right().goFor(0.1);
-        robot.drive.backwards().goFor(0.2);
+        robot.drive.backward().goFor(0.2);
         robot.drive.speed = 0.05;
 
         for (int i = 0; i < 4; i++) {

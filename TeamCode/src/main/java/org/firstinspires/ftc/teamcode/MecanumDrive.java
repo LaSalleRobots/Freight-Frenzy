@@ -144,13 +144,13 @@ public class MecanumDrive {
     public MecanumDrive runFor(double seconds) {return goFor(seconds);}
     public MecanumDrive runDist(double d) {return goDist(d);}
 
-    public MecanumDrive forwards() {
+    public MecanumDrive forward() {
         calculateDirections(0, -1, 0);
         applyPower();
         return this;
     }
 
-    public MecanumDrive backwards() {
+    public MecanumDrive backward() {
         calculateDirections(0, 1, 0);
         applyPower();
         return this;
