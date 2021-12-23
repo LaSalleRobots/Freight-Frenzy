@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-/* 2019-2021 FTC Robotics Freight-Frenzy
- * (c) 2019-2021 La Salle Robotics
+/* 2019-2022 FTC Robotics Freight-Frenzy
+ * (c) 2019-2022 La Salle Robotics
  * Developed for the Freight Frenzy competition
  */
 
@@ -10,34 +10,35 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class RoboHelper {
 
-    private ElapsedTime runtime;
+    private final ElapsedTime runtime;
 
-    // setup motors
-    private DcMotor leftFront = null;
-    private DcMotor rightFront = null;
-    private DcMotor leftBack = null;
-    private DcMotor rightBack = null;
-	private DcMotor plateSpinner = null;
-	private DcMotor gripperLeft = null;
-	private DcMotor gripperRight = null;
-	private DcMotor swing = null;
+
+    private final DcMotor leftFront;
+    private final DcMotor rightFront;
+    private final DcMotor leftBack;
+    private final DcMotor rightBack;
+	private final DcMotor plateSpinner;
+
+    public Arm arm;
 
 	public BNO055IMU imu = null;
 
-    private double fixionCoef = 1.75; // the distance the robot goes in 1 second (in feet)
+    private final double FRICTION_COEF = 1.75; // the distance the robot goes in 1 second (in feet)
 
+    private double armDeg = 0; // arm is at resting at the bottom
     private double flP = 0;
     private double blP = 0;
     private double frP = 0;
     private double brP = 0;
-    private boolean gripperState = false;
-    private boolean gripperTransitioning = false;
+    private final boolean gripperState = false;
+    private final boolean gripperTransitioning = false;
 
     public double speedScale = 1; // keep between 0 and 1
 
@@ -45,15 +46,13 @@ public class RoboHelper {
     public RoboHelper(HardwareMap hardwareMap, ElapsedTime runtime) {
         this.runtime = runtime;
 
-        // setup motors
+        // Setup Motors
         this.leftFront = hardwareMap.get(DcMotor.class, "fL");
         this.rightFront = hardwareMap.get(DcMotor.class, "fR");
         this.leftBack = hardwareMap.get(DcMotor.class, "bL");
         this.rightBack = hardwareMap.get(DcMotor.class, "bR");
 		this.plateSpinner = hardwareMap.get(DcMotor.class, "spinner");
-		this.gripperLeft = hardwareMap.get(DcMotor.class, "gripperLeft");
-		this.gripperRight = hardwareMap.get(DcMotor.class, "gripperRight");
-		this.swing = hardwareMap.get(DcMotor.class, "swing");
+        this.arm = new Arm(hardwareMap);
 
         // Set Directions
         this.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -61,11 +60,9 @@ public class RoboHelper {
         this.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         this.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
 		this.plateSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
-		this.gripperLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-		this.gripperRight.setDirection(DcMotorSimple.Direction.REVERSE);
-		this.swing.setDirection(DcMotorSimple.Direction.FORWARD);
 
-		// Setup sensors
+
+		// Setup Sensors
         this.imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -100,7 +97,7 @@ public class RoboHelper {
 
     // handleGamepads the second gamepad is currently ignored for this input code
     public RoboHelper handleGamepads(Gamepad gamepad1, Gamepad gamepad2) {
-        calculateDirections(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, true);
+        calculateDirections(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, false);
         applyPower();
         return this;
     }
@@ -195,10 +192,10 @@ public class RoboHelper {
     }
 
     public RoboHelper applyPower() {
-        leftFront.setPower(flP);
-        rightFront.setPower(frP);
-        leftBack.setPower(blP);
-        rightBack.setPower(brP);
+        leftFront.setPower(-flP);
+        rightFront.setPower(-frP);
+        leftBack.setPower(-blP);
+        rightBack.setPower(-brP);
         return this;
     }
 
@@ -211,7 +208,7 @@ public class RoboHelper {
 
     public RoboHelper runDist(double runningDistance) {
         applyPower();
-        sleep(runningDistance * fixionCoef);
+        sleep(runningDistance * FRICTION_COEF);
         powerOff();
         return this;
     }
@@ -290,56 +287,5 @@ public class RoboHelper {
 		this.plateSpinner.setPower(0);
 		return this;
 	}
-
-	public RoboHelper gripperClose() {
-        // prevent this from running while it is running.
-        while (gripperTransitioning) {}
-        gripperTransitioning=true;
-        this.gripperLeft.setPower(1);
-        this.gripperRight.setPower(1);
-        this.sleep(0.1);
-        this.gripperLeft.setPower(0);
-        this.gripperRight.setPower(0);
-
-        gripperTransitioning=false;
-        return this;
-    }
-
-    public RoboHelper gripperOpen() {
-        while (gripperTransitioning) {}
-        gripperTransitioning=true;
-        this.gripperLeft.setPower(-1);
-        this.gripperRight.setPower(-1);
-        this.sleep(0.1);
-        this.gripperLeft.setPower(0);
-        this.gripperRight.setPower(0);
-        gripperTransitioning=false;
-        return this;
-    }
-
-    public RoboHelper gripperToggle() {
-        if (gripperState) {
-            gripperClose();
-        } else {
-            gripperOpen();
-        }
-        gripperState = !gripperState;
-        return this;
-    }
-
-    public RoboHelper raiseArm() {
-        this.swing.setPower(0.5);
-        return this;
-    }
-
-    public RoboHelper lowerArm() {
-        this.swing.setPower(-0.5);
-        return this;
-    }
-
-    public RoboHelper stopArm() {
-        this.swing.setPower(0);
-        return this;
-    }
 
 }

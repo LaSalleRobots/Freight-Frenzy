@@ -17,7 +17,7 @@ public class FunctionalityTester extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (debouncer.isPressed(gamepad1.a)) {
-                robot.gripperToggle();
+                robot.arm.gripper.toggle();
             }
         }
     }
