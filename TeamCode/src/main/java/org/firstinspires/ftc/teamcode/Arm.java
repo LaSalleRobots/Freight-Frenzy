@@ -104,5 +104,9 @@ public class Arm {
             }
         }
     }
+
+    public void setPower(double power) {
+        this.arm.setPower(power);
+    }
 }
 

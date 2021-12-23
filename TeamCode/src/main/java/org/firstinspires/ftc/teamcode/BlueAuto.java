@@ -14,16 +14,18 @@ public class BlueAuto extends LinearOpMode {
 
         waitForStart();
 
-        robot.moveRight().runFor(0.1);
-        robot.moveBackwards().runFor(0.2);
-        robot.speedScale = 0.05;
+        robot.drive.right().goFor(0.1);
+        robot.drive.backwards().goFor(0.2);
+        robot.drive.speed = 0.05;
+
         for (int i = 0; i < 4; i++) {
-            robot.moveLeft();
+            robot.drive.left();
             robot.startSpinner().runFor(3.6);
             robot.stopSpinner().runFor(0.7);
         }
-        robot.speedScale = .4;
-        robot.moveRight().runFor(.2);
+
+        robot.drive.speed = .4;
+        robot.drive.right().runFor(.2);
 
     }
 

@@ -15,15 +15,15 @@ public class RedAuto extends LinearOpMode {
 	
 		waitForStart();
 		
-		robot.moveForwards().runFor(.1);
-		robot.moveLeft().runFor(.2);
+		robot.drive.forwards().runFor(.1);
+		robot.drive.left().runFor(.2);
 		robot.speedScale = 0.05;
 		for (int i = 0; i < 4; i++) {
-			robot.moveBackwards();
+			robot.drive.backwards();
 			robot.startSpinnerOther().runFor(3.6);
 			robot.stopSpinner().runFor(0.7);
 		}
 		robot.speedScale = .4;
-		robot.moveForwards().runFor(.2);
+		robot.drive.forwards().runFor(.2);
     }
 }
