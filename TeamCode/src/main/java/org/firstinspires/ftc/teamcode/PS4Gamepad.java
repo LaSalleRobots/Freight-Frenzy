@@ -8,47 +8,44 @@ import androidx.annotation.RequiresApi;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
 
-import java.util.function.Consumer;
-
-public class Gamepad implements Runnable {
+public class PS4Gamepad implements Runnable {
     private com.qualcomm.robotcore.hardware.Gamepad baseGamepad;
 
     // public API
-    public Button a;
-    public Button b;
-    public Button x;
-    public Button y;
+    public Button cross;
+    public Button circle;
+    public Button square;
+    public Button triangle;
     public Button left_bumper;
-    public Trigger left_trigger;
     public Button right_bumper;
-    public Trigger right_trigger;
     public DPad dpad;
     public ThumbStick left_stick;
+    public Trigger left_trigger;
     public ThumbStick right_stick;
+    public Trigger right_trigger;
+    public TouchPad finger1;
+    public TouchPad finger2;
 
     public Thread thread;
 
-    public Gamepad(com.qualcomm.robotcore.hardware.Gamepad gp) {
+    public PS4Gamepad(com.qualcomm.robotcore.hardware.Gamepad gp) {
         baseGamepad = gp; // hopefully copy by reference
     }
 
     public void start() {
         thread = new Thread(this);
-        thread.start(); // will exec in background
+        thread.start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
-
         com.qualcomm.robotcore.hardware.Gamepad oldPad = new com.qualcomm.robotcore.hardware.Gamepad();
-        try {oldPad.copy(baseGamepad);} catch (RobotCoreException e) {e.printStackTrace();}
         while (true) {
-
-            this.a.isPressed = baseGamepad.a;
-            this.b.isPressed = baseGamepad.b;
-            this.x.isPressed = baseGamepad.x;
-            this.y.isPressed = baseGamepad.y;
+            this.cross.isPressed = baseGamepad.cross;
+            this.circle.isPressed = baseGamepad.circle;
+            this.square.isPressed = baseGamepad.square;
+            this.triangle.isPressed = baseGamepad.triangle;
 
             this.dpad.up.isPressed = baseGamepad.dpad_up;
             this.dpad.down.isPressed = baseGamepad.dpad_down;
@@ -67,18 +64,26 @@ public class Gamepad implements Runnable {
             this.left_trigger.amt = baseGamepad.left_trigger;
             this.right_trigger.amt = baseGamepad.right_trigger;
 
+            this.finger1.x = baseGamepad.touchpad_finger_1_x;
+            this.finger1.y = baseGamepad.touchpad_finger_1_y;
+            this.finger1.active = baseGamepad.touchpad_finger_1;
+
+            this.finger2.x = baseGamepad.touchpad_finger_2_x;
+            this.finger2.y = baseGamepad.touchpad_finger_2_y;
+            this.finger2.active = baseGamepad.touchpad_finger_2;
+
             // Notify / call any observers for buttons
-            if ((oldPad.a && !baseGamepad.a) || (!oldPad.a && baseGamepad.a)) {
-                this.a.call();
+            if ((oldPad.cross && !baseGamepad.cross) || (!oldPad.cross && baseGamepad.cross)) {
+                this.cross.call();
             }
-            if ((oldPad.b && !baseGamepad.b) || (!oldPad.b && baseGamepad.b)) {
-                this.b.call();
+            if ((oldPad.circle && !baseGamepad.circle) || (!oldPad.circle && baseGamepad.circle)) {
+                this.circle.call();
             }
-            if ((oldPad.x && !baseGamepad.x) || (!oldPad.x && baseGamepad.x)) {
-                this.x.call();
+            if ((oldPad.square && !baseGamepad.square) || (!oldPad.square && baseGamepad.square)) {
+                this.square.call();
             }
-            if ((oldPad.y && !baseGamepad.y) || (!oldPad.y && baseGamepad.y)) {
-                this.y.call();
+            if ((oldPad.triangle && !baseGamepad.triangle) || (!oldPad.triangle && baseGamepad.triangle)) {
+                this.triangle.call();
             }
 
             if ((oldPad.left_bumper && !baseGamepad.left_bumper) || (!oldPad.left_bumper && baseGamepad.left_bumper)) {
@@ -134,9 +139,28 @@ public class Gamepad implements Runnable {
                 this.right_stick.call();
             }
 
+            if ((oldPad.touchpad_finger_1 && !baseGamepad.touchpad_finger_1) || (!oldPad.touchpad_finger_1 && baseGamepad.touchpad_finger_1)) {
+                this.finger1.call();
+            }
+            if ((oldPad.touchpad_finger_1_x != baseGamepad.touchpad_finger_1_x)) {
+                this.finger1.call();
+            }
+            if ((oldPad.touchpad_finger_1_y != baseGamepad.touchpad_finger_1_y)) {
+                this.finger1.call();
+            }
+
+            if ((oldPad.touchpad_finger_2 && !baseGamepad.touchpad_finger_2) || (!oldPad.touchpad_finger_2 && baseGamepad.touchpad_finger_2)) {
+                this.finger2.call();
+            }
+            if ((oldPad.touchpad_finger_2_x != baseGamepad.touchpad_finger_2_x)) {
+                this.finger2.call();
+            }
+            if ((oldPad.touchpad_finger_2_y != baseGamepad.touchpad_finger_2_y)) {
+                this.finger2.call();
+            }
+
             try {oldPad.copy(baseGamepad);} catch (RobotCoreException e) {e.printStackTrace();}
             try {sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
         }
-
     }
 }

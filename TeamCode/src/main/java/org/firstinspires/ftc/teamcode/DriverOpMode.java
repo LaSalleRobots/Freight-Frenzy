@@ -33,14 +33,14 @@ public class DriverOpMode extends LinearOpMode {
                 robot.stopSpinner();
             }
         });
-        driver.left_stick.bind((Gamepad.ThumbStick t)->{
+        driver.left_stick.bind((ThumbStick t)->{
             robot.handleGamepads(gamepad1, gamepad2);
         });
-        driver.right_stick.bind((Gamepad.ThumbStick t)->{
+        driver.right_stick.bind((ThumbStick t)->{
             robot.handleGamepads(gamepad1, gamepad2);
         });
         driver.start();
-        Gamepad copilot = new Gamepad(gamepad2);
+        PS4Gamepad copilot = new PS4Gamepad(gamepad2);
 
         copilot.left_bumper.bind((Boolean x)->{
             if (x) {
@@ -56,7 +56,7 @@ public class DriverOpMode extends LinearOpMode {
                 robot.stopSpinner();
             }
         });
-        copilot.a.bind((Boolean x)->{
+        copilot.cross.bind((Boolean x)->{
             robot.arm.gripper.toggle();
         });
         copilot.dpad.up.bind((Boolean x)-> {
@@ -70,5 +70,9 @@ public class DriverOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.update();
         }
+        driver.thread.interrupt();
+        copilot.thread.interrupt();
+
     }
+
 }
