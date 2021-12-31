@@ -6,30 +6,40 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
 
+    public int GROUND_LEVEL = 4;// degrees for the ground
+    public int BOTTOM_LEVEL = 14;
+    public int MIDDLE_LEVEL = 44;
+    public int TOP_LEVEL = 75;
+
     public Gripper gripper;
 
-    private final Servo wrist;
-    private final DcMotor arm;
+    public final Servo wrist;
+    public final DcMotor arm;
+    public Debouncer wristServoDeb = new Debouncer(.0166);
 
     // Internal State
     private boolean clawOpen;
-    private double armPosition = 0;
-    public int armDelta = 10; // how much the arm should raise/lower by when asking to do those ops
+    public double armPosition = 0;
+    public double armDelta = 0.5; // how much the arm should raise/lower by when asking to do those ops
     public int tickAccuracy = 20;
 
     public Arm (HardwareMap hardwareMap) {
-        arm = hardwareMap.get(DcMotor.class, "arm");
+        this.arm = hardwareMap.get(DcMotor.class, "arm");
+        this.arm.setPower(1);
+
 
         // Setup Servos
         this.wrist = hardwareMap.get(Servo.class, "wrist");
 
         // Setup Encoders
         this.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.gripper = new Gripper(hardwareMap);
 
     }
 
     public void setPositionAsync(double degrees) {
-        this.armPosition = bound(degrees);
+        //this.armPosition = bound(degrees);
+        this.armPosition = degrees;
         this.arm.setTargetPosition(convertDegreesToTicks(this.armPosition));
         this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.updateWrist();
@@ -38,21 +48,22 @@ public class Arm {
     public void setPosition(double degrees) {
         // this is the same as the async version except it waits until the arm has gotten within the tick accuracy
         this.setPositionAsync(degrees);
-        while (
-                Math.abs(this.arm.getCurrentPosition() - this.arm.getTargetPosition()) <= this.tickAccuracy
-        ) {}
+        while (this.arm.isBusy()) {}
     }
 
     public int convertDegreesToTicks(double degrees) {
         return (int)(degrees * 12);
     }
 
-    public double calculateWrist() {
-        return convertDegreesToTicks(this.armPosition) - 45;
-    }
-
     public void updateWrist() {
-        this.wrist.setPosition(calculateWrist());
+        if (wristServoDeb.isPressed(true)) {
+            if (this.armPosition > 130) {
+                this.wrist.setPosition(20.0/180);
+            } else {
+                this.wrist.setPosition((this.armPosition-20)/180);
+            }
+
+        }
     }
 
     public void raise() {
@@ -74,8 +85,8 @@ public class Arm {
     }
 
     public static class Gripper {
-        private final Servo clawLeft;
-        private final Servo clawRight;
+        public final Servo clawLeft;
+        public final Servo clawRight;
         private boolean clawOpen;
 
         public Gripper(HardwareMap hardwareMap) {
@@ -85,22 +96,24 @@ public class Arm {
 
 
         public void close() {
-            this.clawLeft.setPosition(180-45);
-            this.clawRight.setPosition(45);
+            this.clawLeft.setPosition(1);
+            this.clawRight.setPosition(0);
             this.clawOpen = true;
         }
 
         public void open() {
-            this.clawLeft.setPosition(180);
-            this.clawRight.setPosition(0);
+            this.clawLeft.setPosition(.85);
+            this.clawRight.setPosition(.15);
             this.clawOpen = false;
         }
 
         public void toggle() {
             if (clawOpen) {
                 this.close();
+                this.clawOpen = false;
             } else {
                 this.open();
+                this.clawOpen = true;
             }
         }
     }
