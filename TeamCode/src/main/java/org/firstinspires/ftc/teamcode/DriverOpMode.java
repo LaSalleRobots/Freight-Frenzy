@@ -17,61 +17,42 @@ public class DriverOpMode extends LinearOpMode {
 
         waitForStart();
 
-        Gamepad driver = new Gamepad(gamepad1);
-
-        driver.left_bumper.bind((Boolean x)->{
-            if (x) {
-                robot.startSpinnerOther();
-            } else {
-                robot.stopSpinner();
-            }
-        });
-        driver.right_bumper.bind((Boolean x)->{
-            if (x) {
-                robot.startSpinner();
-            } else {
-                robot.stopSpinner();
-            }
-        });
-        driver.left_stick.bind((ThumbStick t)->{
-            robot.handleGamepads(gamepad1, gamepad2);
-        });
-        driver.right_stick.bind((ThumbStick t)->{
-            robot.handleGamepads(gamepad1, gamepad2);
-        });
-        driver.start();
-        PS4Gamepad copilot = new PS4Gamepad(gamepad2);
-
-        copilot.left_bumper.bind((Boolean x)->{
-            if (x) {
-                robot.startSpinnerOther();
-            } else {
-                robot.stopSpinner();
-            }
-        });
-        copilot.right_bumper.bind((Boolean x)->{
-            if (x) {
-                robot.startSpinner();
-            } else {
-                robot.stopSpinner();
-            }
-        });
-        copilot.cross.bind((Boolean x)->{
-            robot.arm.gripper.toggle();
-        });
-        copilot.dpad.up.bind((Boolean x)-> {
-            robot.arm.raise();
-        });
-        copilot.dpad.down.bind((Boolean x)-> {
-            robot.arm.lower();
-        });
-        copilot.start();
+        Debouncer debouncer = new Debouncer(.2);
+        Debouncer psxDebouncer = new Debouncer(.2);
 
         while (opModeIsActive()) {
+            robot.handleGamepads(gamepad1, gamepad2);
+
+            if (gamepad1.left_bumper || gamepad2.left_bumper) {
+                robot.arm.setPosition(robot.arm.GROUND_LEVEL);
+                //robot.startSpinnerOther();
+            } else {
+                //robot.stopSpinner();
+            }
+            if (gamepad1.right_bumper || gamepad2.right_bumper) {
+                robot.startSpinner();
+            } else {
+                robot.stopSpinner();
+            }
+
+            if (debouncer.isPressed(gamepad1.a) || psxDebouncer.isPressed(gamepad2.cross)) {
+                robot.arm.gripper.toggle();
+            }
+            if (debouncer.isPressed(gamepad1.b)) {
+                robot.arm.wrist.setPosition(.5);
+            }
+
+            if (gamepad1.dpad_up || gamepad2.dpad_up) {
+                robot.arm.raise();
+            }
+            if (gamepad1.dpad_down || gamepad2.dpad_down) {
+                robot.arm.lower();
+            }
+            telemetry.addData("Arm (deg)", robot.arm.armPosition);
+            telemetry.addData("Arm (deg) (current): ", robot.arm.arm.getCurrentPosition()/12);
+            telemetry.addData("Wrist (Deg): ", robot.arm.wrist.getPosition());
             telemetry.update();
         }
-        driver.thread.interrupt();
-        copilot.thread.interrupt();
 
     }
 
