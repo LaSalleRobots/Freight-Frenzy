@@ -30,6 +30,18 @@ public class PS4Gamepad implements Runnable {
 
     public PS4Gamepad(com.qualcomm.robotcore.hardware.Gamepad gp) {
         baseGamepad = gp; // hopefully copy by reference
+        cross = new Button();
+        circle = new Button();
+        square = new Button();
+        triangle = new Button();
+        left_bumper = new Button();
+        right_bumper = new Button();
+        dpad = new DPad();
+        left_stick = new ThumbStick();
+        right_stick = new ThumbStick();
+        left_trigger = new Trigger();
+        finger1 = new TouchPad();
+        finger2 = new TouchPad();
     }
 
     public void start() {

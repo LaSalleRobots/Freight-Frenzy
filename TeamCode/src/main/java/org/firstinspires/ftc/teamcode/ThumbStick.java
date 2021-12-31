@@ -11,6 +11,10 @@ public class ThumbStick {
     public float y;
     public Button press;
 
+    public ThumbStick() {
+        press = new Button();
+    }
+
     private Consumer<ThumbStick> bound;
 
     public void bind(Consumer<ThumbStick> func) {

@@ -30,6 +30,17 @@ public class Gamepad implements Runnable {
 
     public Gamepad(com.qualcomm.robotcore.hardware.Gamepad gp) {
         baseGamepad = gp; // hopefully copy by reference
+        a = new Button();
+        b = new Button();
+        x = new Button();
+        y = new Button();
+        left_bumper = new Button();
+        left_trigger = new Trigger();
+        right_bumper = new Button();
+        right_trigger = new Trigger();
+        dpad = new DPad();
+        left_stick = new ThumbStick();
+        right_stick = new ThumbStick();
     }
 
     public void start() {
