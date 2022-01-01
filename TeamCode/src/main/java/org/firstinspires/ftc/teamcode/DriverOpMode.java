@@ -23,13 +23,22 @@ public class DriverOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             robot.handleGamepads(gamepad1, gamepad2);
 
-            if (gamepad1.left_bumper || gamepad2.left_bumper) {
-                robot.arm.setPosition(robot.arm.GROUND_LEVEL);
-                //robot.startSpinnerOther();
-            } else {
-                //robot.stopSpinner();
+            if (gamepad2.left_stick_y >= 0.1) {
+                robot.arm.raise(gamepad2.left_stick_y);
             }
-            if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            if (gamepad2.left_stick_y <= -0.1) {
+                robot.arm.lower(Math.abs(gamepad2.left_stick_y));
+            }
+            if (gamepad2.left_bumper) {
+                robot.arm.setPosition(robot.arm.GROUND_LEVEL);
+            }
+
+            if (gamepad1.left_bumper) {
+                robot.startSpinnerOther();
+            } else {
+                robot.stopSpinner();
+            }
+            if (gamepad1.right_bumper) {
                 robot.startSpinner();
             } else {
                 robot.stopSpinner();
@@ -42,10 +51,10 @@ public class DriverOpMode extends LinearOpMode {
                 robot.arm.wrist.setPosition(.5);
             }
 
-            if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            if (gamepad1.dpad_up) {
                 robot.arm.raise();
             }
-            if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            if (gamepad1.dpad_down) {
                 robot.arm.lower();
             }
             telemetry.addData("Arm (deg)", robot.arm.armPosition);

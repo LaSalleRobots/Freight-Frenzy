@@ -69,8 +69,16 @@ public class Arm {
         this.setPositionAsync(armPosition + armDelta);
     }
 
+    public void raise(double amt) {
+        this.setPositionAsync(armPosition + amt);
+    }
+
     public void lower() {
         this.setPositionAsync(armPosition - armDelta);
+    }
+
+    public void lower(double amt) {
+        this.setPositionAsync(armPosition - amt);
     }
 
     public double bound(double degrees) {
