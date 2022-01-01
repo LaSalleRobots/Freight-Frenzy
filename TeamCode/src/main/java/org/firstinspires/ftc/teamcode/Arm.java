@@ -38,8 +38,7 @@ public class Arm {
     }
 
     public void setPositionAsync(double degrees) {
-        //this.armPosition = bound(degrees);
-        this.armPosition = degrees;
+        this.armPosition = bound(degrees);
         this.arm.setTargetPosition(convertDegreesToTicks(this.armPosition));
         this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.updateWrist();
@@ -78,8 +77,8 @@ public class Arm {
         // this will keep the arm within its ok range of motion
         if (degrees >= 270) {
             return 270;
-        } else if (degrees <= 0) {
-            return 0;
+        } else if (degrees <= 5) {
+            return 5;
         }
         return degrees;
     }
