@@ -26,7 +26,7 @@ public class Arm {
 
     public Arm (HardwareMap hardwareMap) {
         this.arm = hardwareMap.get(DcMotor.class, "arm");
-        this.arm.setPower(1);
+        this.arm.setPower(0.7);
 
 
         // Setup Servos
@@ -36,6 +36,13 @@ public class Arm {
         this.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.gripper = new Gripper(hardwareMap);
 
+    }
+
+    public void setPositionAsyncUnbounded(double degrees) {
+        this.armPosition = degrees;
+        this.arm.setTargetPosition(convertDegreesToTicks(this.armPosition));
+        this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.updateWrist();
     }
 
     public void setPositionAsync(double degrees) {
@@ -74,6 +81,10 @@ public class Arm {
         this.setPositionAsync(armPosition + amt);
     }
 
+    public void raiseUnbounded(double amt) {
+        this.setPositionAsyncUnbounded(armPosition + amt);
+    }
+
     public void lower() {
         this.setPositionAsync(armPosition - armDelta);
     }
@@ -82,10 +93,14 @@ public class Arm {
         this.setPositionAsync(armPosition - amt);
     }
 
+    public void lowerUnbounded(double amt) {
+        this.setPositionAsyncUnbounded(armPosition - amt);
+    }
+
     public double bound(double degrees) {
         // this will keep the arm within its ok range of motion
-        if (degrees >= 270) {
-            return 270;
+        if (degrees >= 253) {
+            return 253;
         } else if (degrees <= 5) {
             return 5;
         }
