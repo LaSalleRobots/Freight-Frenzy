@@ -81,12 +81,6 @@ public class DriverOpMode extends LinearOpMode {
                 robot.arm.wrist.setPosition(.5);
             }
 
-            if (gamepad1.dpad_up) {
-                robot.arm.raise();
-            }
-            if (gamepad1.dpad_down) {
-                robot.arm.lower();
-            }
             telemetry.addData("Arm (deg)", robot.arm.armPosition);
             telemetry.addData("Arm (deg) (current): ", robot.arm.arm.getCurrentPosition()/12);
             telemetry.addData("Wrist (Deg): ", robot.arm.wrist.getPosition());
