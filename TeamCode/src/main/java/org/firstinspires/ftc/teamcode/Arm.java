@@ -10,7 +10,7 @@ public class Arm {
     // Fixed degrees for where the arm should be for each level of placement
     public int BOTTOM_LEVEL = 14;
     public int MIDDLE_LEVEL = 44;
-    public int TOP_LEVEL = 75;
+    public int TOP_LEVEL = 80;
 
     public Gripper gripper;
 
