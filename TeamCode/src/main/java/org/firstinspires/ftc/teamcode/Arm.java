@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
 
-    public int GROUND_LEVEL = 4; // degrees for the ground
+    public int GROUND_LEVEL = 3; // degrees for the ground
     // Fixed degrees for where the arm should be for each level of placement
-    public int BOTTOM_LEVEL = 14;
-    public int MIDDLE_LEVEL = 44;
+    public int BOTTOM_LEVEL = 25;
+    public int MIDDLE_LEVEL = 52;
     public int TOP_LEVEL = 80;
 
     public Gripper gripper;
