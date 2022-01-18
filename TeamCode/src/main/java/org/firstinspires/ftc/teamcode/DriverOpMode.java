@@ -49,12 +49,25 @@ public class DriverOpMode extends LinearOpMode {
                 }
             }
 
+            if (gamepad2.y) {
+                if (gamepad2.start) {
+                    robot.arm.reInit();
+                }
+            }
+
             if (gamepad2.left_bumper) {
-                robot.arm.setPositionAsync(robot.arm.GROUND_LEVEL);
+                robot.startSpinner();
+            } else {
+                robot.stopSpinner();
+            }
+            if (gamepad2.right_bumper) {
+                robot.startSpinnerOther();
+            } else {
+                robot.stopSpinner();
             }
 
             if (gamepad2.dpad_down) {
-                robot.arm.setPositionAsync(robot.arm.BOTTOM_LEVEL);
+                robot.arm.setPositionAsync(robot.arm.GROUND_LEVEL);
             }
             if (gamepad2.dpad_right) {
                 robot.arm.setPositionAsync(robot.arm.MIDDLE_LEVEL);
