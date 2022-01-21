@@ -134,6 +134,10 @@ public class Arm {
             this.clawOpen = false;
         }
 
+        public void release() {
+            open();
+        }
+
         public void toggle() {
             if (clawOpen) {
                 this.close();
