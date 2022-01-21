@@ -67,7 +67,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
 
-    private Position position;
+    public Position position;
 
     public AprilTagDetectionPipeline(double tagsize, double fx, double fy, double cx, double cy)
     {
@@ -80,6 +80,22 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
         this.cy = cy;
 
         constructMatrix();
+    }
+
+
+    public AprilTagDetectionPipeline() {
+        double fx = 578.272;
+        double fy = 578.272;
+        double cx = 402.145;
+        double cy = 221.506;
+        double tagsize = 0.166;
+        this.tagsize = tagsize;
+        this.tagsizeX = tagsize;
+        this.tagsizeY = tagsize;
+        this.fx = fx;
+        this.fy = fy;
+        this.cx = cx;
+        this.cy = cy;
     }
 
     @Override
@@ -119,20 +135,34 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
             detectionsUpdate = detections;
         }
 
-        if (detections.length() >= 0) {
+        if (detections.size() > 0) {
             Point center = detections.get(0).center;
             if (center.x < input.width()/3) {
-                position = Position.LEFT;
+                position = Position.Left;
             } else if (center.x > input.width()*2/3) {
-                position = Position.RIGHT;
+                position = Position.Right;
             } else {
-                position = Position.CENTER;
+                position = Position.Center;
             }
         } else {
             position = Position.Left;
         }
 
+        /*
+        // For fun, use OpenCV to draw 6DOF markers on the image. We actually recompute the pose using
+        // OpenCV because I haven't yet figured out how to re-use AprilTag's pose in OpenCV.
+        for(AprilTagDetection detection : detections)
+        {
+            Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
+            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
+            draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
+        }*/
+
         return input;
+    }
+
+    public Position getPosition() {
+        return this.position;
     }
 
     public void setDecimation(float decimation)
