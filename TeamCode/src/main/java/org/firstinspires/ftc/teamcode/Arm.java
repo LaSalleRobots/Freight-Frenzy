@@ -111,6 +111,11 @@ public class Arm {
         this.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    public void deactivate() {
+        this.arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.arm.setPower(0);
+    }
+
     public static class Gripper {
         public final Servo clawLeft;
         public final Servo clawRight;
