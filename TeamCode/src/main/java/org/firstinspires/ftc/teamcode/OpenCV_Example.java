@@ -8,7 +8,7 @@ public class OpenCV_Example extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TeamElementTracker teamElementTracker = new TeamElementTracker();
+        BasicTracker teamElementTracker = new BasicTracker();
         OpenCVPipelineRunner runner = new OpenCVPipelineRunner(hardwareMap, teamElementTracker);
 
         waitForStart();
@@ -18,10 +18,10 @@ public class OpenCV_Example extends LinearOpMode {
             telemetry.addData("FPS", runner.phoneCam.getFps());
             telemetry.addData("Pipeline (ms)", runner.phoneCam.getPipelineTimeMs());
             telemetry.addData("Total Frame time (ms)", runner.phoneCam.getTotalFrameTimeMs());
-            telemetry.addData(
+            /*telemetry.addData(
                     "W, H (px)",
                     teamElementTracker.bounds.size.width + ", " + teamElementTracker.bounds.size.height);
-            telemetry.addData("Position (Left,Center,Right)", teamElementTracker.getPosition());
+            telemetry.addData("Position (Left,Center,Right)", teamElementTracker.getPosition());*/
             telemetry.update();
             sleep(100);
         }

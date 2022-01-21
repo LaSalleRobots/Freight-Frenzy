@@ -76,8 +76,8 @@ public class OpenCVPipelineRunner {
          * (default) or single buffering. See the JavaDoc for this method for more details
          */
         phoneCam.startStreaming(
-                640, 480, OpenCvCameraRotation.SIDEWAYS_LEFT, OpenCvInternalCamera.BufferMethod.DOUBLE);
-    }
+                320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT, OpenCvInternalCamera.BufferMethod.DOUBLE);
+    }   
 
     public void start() {
         start(false);
