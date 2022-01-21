@@ -43,6 +43,32 @@ public class OpenCVPipelineRunner {
         }
     }
 
+
+    void OpenCvTracker(HardwareMap hardwareMap) {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = OpenCvCameraFactory.getInstance()
+                .createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                phoneCam.startStreaming(800,448, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
+
+    }
+
+    void setPipeline(OpenCvPipeline pipeline) {
+        phoneCam.setPipeline(pipeline);
+    }
+
     public void start(boolean showData) {
         phoneCam.showFpsMeterOnViewport(showData);
         /*
@@ -63,5 +89,9 @@ public class OpenCVPipelineRunner {
 
     public void removeTracker(OpenCvTracker tracker) {
         openCvTrackerApiPipeline.removeTracker(tracker);
+    }
+
+    public void close() {
+        phoneCam.stopStreaming();
     }
 }
