@@ -9,6 +9,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
 import java.util.*;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
 import org.openftc.easyopencv.*;
@@ -17,7 +19,7 @@ public class OpenCVPipelineRunner {
 
     private OpenCvTrackerApiPipeline openCvTrackerApiPipeline;
     /** The phonecam module @see org.openftc.easyopencv.OpenCvInternalCamera */
-    public OpenCvInternalCamera phoneCam;
+    public OpenCvWebcam phoneCam;
 
     OpenCVPipelineRunner(HardwareMap hardwareMap, OpenCvTracker... trackers) {
         int cameraMonitorViewId =
@@ -28,10 +30,24 @@ public class OpenCVPipelineRunner {
                                 "cameraMonitorViewId",
                                 "id",
                                 hardwareMap.appContext.getPackageName()); // for camera preview
+        WebcamName webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
         phoneCam =
-                OpenCvCameraFactory.getInstance()
-                        .createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        phoneCam.openCameraDevice();
+                OpenCvCameraFactory.getInstance().createWebcam(webcam);
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                phoneCam.startStreaming(800,448, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
         openCvTrackerApiPipeline = new OpenCvTrackerApiPipeline();
         phoneCam.setPipeline(openCvTrackerApiPipeline);
 
@@ -46,8 +62,9 @@ public class OpenCVPipelineRunner {
 
     void OpenCvTracker(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance()
-                .createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        WebcamName webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
+        phoneCam =
+                OpenCvCameraFactory.getInstance().createWebcam(webcam);
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -76,7 +93,7 @@ public class OpenCVPipelineRunner {
          * (default) or single buffering. See the JavaDoc for this method for more details
          */
         phoneCam.startStreaming(
-                320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT, OpenCvInternalCamera.BufferMethod.DOUBLE);
+                320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
     }   
 
     public void start() {

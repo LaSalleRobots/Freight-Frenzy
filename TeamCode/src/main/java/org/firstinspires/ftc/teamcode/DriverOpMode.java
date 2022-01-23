@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Driver Controlled (Robot Centric) 2021", group = "Driver")
+@TeleOp(name = "Driver Controlled", group = "Driver")
 public class DriverOpMode extends LinearOpMode {
 
 
@@ -49,10 +49,8 @@ public class DriverOpMode extends LinearOpMode {
                 }
             }
 
-            if (gamepad2.y) {
-                if (gamepad2.start) {
-                    robot.arm.reInit();
-                }
+            if (gamepad2.back) {
+                robot.arm.reInit();
             }
 
             if (gamepad2.left_bumper) {
