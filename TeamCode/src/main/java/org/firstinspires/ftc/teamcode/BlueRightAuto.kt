@@ -30,7 +30,7 @@ class BlueRightAuto : LinearOpMode() {
         robot.drive.backward().goFor(0.2)
         robot.drive.rotateLeft().goFor(0.05)
         robot.drive.backward().goFor(0.1)
-        robot.startSpinnerOther()
+        robot.startSpinnerOther(true)
         robot.sleep(3.0)
         robot.drive.speed = 0.5
         robot.drive.forward().goFor(1.0)

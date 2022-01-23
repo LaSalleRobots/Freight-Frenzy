@@ -33,7 +33,7 @@ class RedLeftAuto : LinearOpMode() {
         robot.drive.speed = 0.2
         robot.drive.backward().goFor(0.3)
         robot.drive.right().goFor(0.5) // back into the carefully
-        robot.startSpinner()
+        robot.startSpinner(true)
         robot.sleep(3.0)
         robot.drive.speed = 1.0
         robot.drive.left().goFor(0.8)

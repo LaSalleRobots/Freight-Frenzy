@@ -105,11 +105,21 @@ public class RoboHelper {
     }
 
 	public RoboHelper startSpinner() {
-		this.plateSpinner.setPower(0.7);
+		this.plateSpinner.setPower(1);
 		return this;
 	}
 
 	public RoboHelper startSpinnerOther() {
+        this.plateSpinner.setPower(-1);
+        return this;
+    }
+
+    public RoboHelper startSpinner(boolean auto) {
+        this.plateSpinner.setPower(0.7);
+        return this;
+    }
+
+    public RoboHelper startSpinnerOther(boolean auto) {
         this.plateSpinner.setPower(-0.7);
         return this;
     }
