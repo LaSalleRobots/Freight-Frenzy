@@ -1,23 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Full AI Auto", group = "AI")
-public class AIRedAuto extends LinearOpMode {
+@Disabled
+public class AIRedRightAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime runtime = new ElapsedTime();
         RoboHelper robot = new RoboHelper(hardwareMap, runtime);
 
-        TeamElementTracker teamElementTracker = new TeamElementTracker();
-        OpenCVPipelineRunner vision = new OpenCVPipelineRunner(hardwareMap, teamElementTracker);
+        AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline();
+        OpenCVPipelineRunner vision = new OpenCVPipelineRunner(hardwareMap);
+        vision.setPipeline(aprilTagDetectionPipeline);
         vision.start(); // lol we can peep here.
 
         waitForStart();
-        TeamElementTracker.Position position = teamElementTracker.getPosition();
-        robot.drive.right().goFor(1); // get to the alliance shipping hub
+        AprilTagDetectionPipeline.Position position = aprilTagDetectionPipeline.getPosition();
+        telemetry.addData("Predicted Position:", position);
+        telemetry.update();
+        robot.drive.left().goFor(.5); // get to the alliance shipping hub
         // during our approach lets make the arm go the the correct level
         switch (position) {
             case Left:

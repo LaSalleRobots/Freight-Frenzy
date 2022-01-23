@@ -61,7 +61,7 @@ public class RoboHelper {
 
     // handleGamepads the second gamepad is currently ignored for this input code
     public RoboHelper handleGamepads(Gamepad gamepad1, Gamepad gamepad2) {
-        drive.calculateDirections(gamepad1.left_stick_x, gamepad1.left_stick_y, Math.pow(gamepad1.right_stick_x, 5));
+        drive.calculateDirections(gamepad1.left_stick_x * 0.75, gamepad1.left_stick_y * 0.75, 0.5*gamepad1.right_stick_x);
         drive.applyPower();
         return this;
     }
@@ -100,12 +100,12 @@ public class RoboHelper {
     }
 
 	public RoboHelper startSpinner() {
-		this.plateSpinner.setPower(1);
+		this.plateSpinner.setPower(0.7);
 		return this;
 	}
 
 	public RoboHelper startSpinnerOther() {
-        this.plateSpinner.setPower(-1);
+        this.plateSpinner.setPower(-0.7);
         return this;
     }
 
