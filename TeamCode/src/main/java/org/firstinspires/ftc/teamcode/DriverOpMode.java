@@ -42,10 +42,10 @@ public class DriverOpMode extends LinearOpMode {
 
             } else {
                 if (gamepad2.left_stick_y >= 0.1) {
-                    robot.arm.lower(Math.pow(gamepad2.left_stick_y, 5));
+                    robot.arm.lower(Math.pow(gamepad2.left_stick_y, 5)*0.5);
                 }
                 if (gamepad2.left_stick_y <= -0.1) {
-                    robot.arm.raise(Math.pow(Math.abs(gamepad2.left_stick_y), 5));
+                    robot.arm.raise(Math.pow(Math.abs(gamepad2.left_stick_y), 5)*0.5);
                 }
             }
 

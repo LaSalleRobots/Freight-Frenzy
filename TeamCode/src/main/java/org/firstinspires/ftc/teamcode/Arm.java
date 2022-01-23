@@ -101,8 +101,8 @@ public class Arm {
         // this will keep the arm within its ok range of motion
         if (degrees >= 253) {
             return 253;
-        } else if (degrees <= 2) {
-            return 2;
+        } else if (degrees <= 0) {
+            return 0;
         }
         return degrees;
     }
