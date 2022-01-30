@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 
-@Autonomous(name = "Blue Auto (Left)", group = "Proc", preselectTeleOp = "Driver Controlled")
+@Disabled
 class BlueLeftAuto: LinearOpMode() {
     override fun runOpMode() {
         var elapsedTime = ElapsedTime()

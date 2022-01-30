@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 
-@Autonomous(name = "Full Auto Blue (right)", group = "AI", preselectTeleOp = "Driver Controlled")
+@Disabled
 class BlueRightAuto : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {

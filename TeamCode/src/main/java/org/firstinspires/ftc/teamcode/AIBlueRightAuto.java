@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Full Auto Red (left): CAM", group = "AI")
-public class AIRedLeftAuto extends LinearOpMode {
+@Autonomous(name = "Full Auto Blue (right): CAM", group = "AI")
+public class AIBlueRightAuto extends LinearOpMode {
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
         RoboHelper robot = new RoboHelper(hardwareMap, runtime);
         robot.drive.speed = 0.5;
-
         AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline();
         OpenCVPipelineRunner vision = new OpenCVPipelineRunner(hardwareMap);
         vision.setPipeline(aprilTagDetectionPipeline);
 
         waitForStart();
+
         robot.arm.gripper.close();
         robot.sleep(3);
         AprilTagDetectionPipeline.Position position = aprilTagDetectionPipeline.getPosition();
@@ -29,28 +28,28 @@ public class AIRedLeftAuto extends LinearOpMode {
         } else {
             robot.arm.setPosition(robot.arm.TOP_LEVEL + 10); // top level
         }
-
-        robot.drive.right().goFor(1.5);
+        robot.drive.left().goFor(1.7);
         robot.sleep(.2);
-        robot.drive.forward().goFor(1.1);
+        robot.drive.rotateLeft().goFor(.05);
+        robot.drive.forward().goFor(.8);
         robot.sleep(.2);
 
         robot.arm.gripper.open();
-        robot.drive.backward().goFor(1.1);
+        robot.drive.backward().goFor(1.5);
         robot.sleep(.2);
-        robot.drive.rotateRight().goFor(.55);
-        robot.drive.backward().goFor(2.5);
-        robot.drive.left().goFor(1);
-        robot.drive.backward().goFor(1);
+        robot.drive.right().goFor(2.4);
         {
             robot.drive.startSlowMode(.4);
             robot.drive.right().goFor(1.5);
             robot.drive.endSlowMode();
         }
-        robot.startSpinner(true);
+        robot.startSpinnerOther(true);
         robot.sleep(3);
         robot.stopSpinner();
-        robot.drive.left().goFor(1.5);
+        robot.drive.forward().goFor(1.1);
+        robot.drive.rotateLeft().goFor(.55);
+        robot.drive.backward().goFor(.5);
+        robot.arm.gripper.open();
         robot.arm.setPosition(0);
 
     }

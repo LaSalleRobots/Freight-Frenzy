@@ -19,27 +19,42 @@ public class OpenCVPipelineRunner {
 
     private OpenCvTrackerApiPipeline openCvTrackerApiPipeline;
     /** The phonecam module @see org.openftc.easyopencv.OpenCvInternalCamera */
-    public OpenCvWebcam phoneCam;
+    public OpenCvWebcam webcam;
 
-    OpenCVPipelineRunner(HardwareMap hardwareMap, OpenCvTracker... trackers) {
-        int cameraMonitorViewId =
-                hardwareMap
-                        .appContext
-                        .getResources()
-                        .getIdentifier(
-                                "cameraMonitorViewId",
-                                "id",
-                                hardwareMap.appContext.getPackageName()); // for camera preview
-        WebcamName webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
-        phoneCam =
-                OpenCvCameraFactory.getInstance().createWebcam(webcam);
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+
+    public OpenCVPipelineRunner(HardwareMap hardwareMap) {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        openCvTrackerApiPipeline = new OpenCvTrackerApiPipeline();
+        webcam.setPipeline(openCvTrackerApiPipeline);
+
+        webcam.setMillisecondsPermissionTimeout(2500);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(800,448, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                /*
+                 * Tell the webcam to start streaming images to us! Note that you must make sure
+                 * the resolution you specify is supported by the camera. If it is not, an exception
+                 * will be thrown.
+                 *
+                 * Keep in mind that the SDK's UVC driver (what OpenCvWebcam uses under the hood) only
+                 * supports streaming from the webcam in the uncompressed YUV image format. This means
+                 * that the maximum resolution you can stream at and still get up to 30FPS is 480p (640x480).
+                 * Streaming at e.g. 720p will limit you to up to 10FPS and so on and so forth.
+                 *
+                 * Also, we specify the rotation that the webcam is used in. This is so that the image
+                 * from the camera sensor can be rotated such that it is always displayed with the image upright.
+                 * For a front facing camera, rotation is defined assuming the user is looking at the screen.
+                 * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
+                 * away from the user.
+                 */
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT); // ayy 480p!
+
             }
+
             @Override
             public void onError(int errorCode)
             {
@@ -48,56 +63,100 @@ public class OpenCVPipelineRunner {
                  */
             }
         });
-        openCvTrackerApiPipeline = new OpenCvTrackerApiPipeline();
-        phoneCam.setPipeline(openCvTrackerApiPipeline);
-
-        // Set the viewport renderer to use the gpu so we have better handling
-        phoneCam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
-
-        for (OpenCvTracker tracker : trackers) {
-            openCvTrackerApiPipeline.addTracker(tracker);
-        }
     }
 
-
-    void OpenCvTracker(HardwareMap hardwareMap) {
+    public OpenCVPipelineRunner(HardwareMap hardwareMap, OpenCvPipeline pipeline) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
-        phoneCam =
-                OpenCvCameraFactory.getInstance().createWebcam(webcam);
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        webcam.setPipeline(pipeline);
+
+        webcam.setMillisecondsPermissionTimeout(2500);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(800,448, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                /*
+                 * Tell the webcam to start streaming images to us! Note that you must make sure
+                 * the resolution you specify is supported by the camera. If it is not, an exception
+                 * will be thrown.
+                 *
+                 * Keep in mind that the SDK's UVC driver (what OpenCvWebcam uses under the hood) only
+                 * supports streaming from the webcam in the uncompressed YUV image format. This means
+                 * that the maximum resolution you can stream at and still get up to 30FPS is 480p (640x480).
+                 * Streaming at e.g. 720p will limit you to up to 10FPS and so on and so forth.
+                 *
+                 * Also, we specify the rotation that the webcam is used in. This is so that the image
+                 * from the camera sensor can be rotated such that it is always displayed with the image upright.
+                 * For a front facing camera, rotation is defined assuming the user is looking at the screen.
+                 * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
+                 * away from the user.
+                 */
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT); // ayy 480p!
+
             }
 
             @Override
             public void onError(int errorCode)
             {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+    }
 
+    public OpenCVPipelineRunner(HardwareMap hardwareMap, OpenCvTracker tracker) {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        openCvTrackerApiPipeline = new OpenCvTrackerApiPipeline();
+        webcam.setPipeline(openCvTrackerApiPipeline);
+
+        webcam.setMillisecondsPermissionTimeout(2500);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                /*
+                 * Tell the webcam to start streaming images to us! Note that you must make sure
+                 * the resolution you specify is supported by the camera. If it is not, an exception
+                 * will be thrown.
+                 *
+                 * Keep in mind that the SDK's UVC driver (what OpenCvWebcam uses under the hood) only
+                 * supports streaming from the webcam in the uncompressed YUV image format. This means
+                 * that the maximum resolution you can stream at and still get up to 30FPS is 480p (640x480).
+                 * Streaming at e.g. 720p will limit you to up to 10FPS and so on and so forth.
+                 *
+                 * Also, we specify the rotation that the webcam is used in. This is so that the image
+                 * from the camera sensor can be rotated such that it is always displayed with the image upright.
+                 * For a front facing camera, rotation is defined assuming the user is looking at the screen.
+                 * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
+                 * away from the user.
+                 */
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT); // ayy 480p!
+
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
             }
         });
 
+        openCvTrackerApiPipeline.addTracker(tracker);
     }
 
     void setPipeline(OpenCvPipeline pipeline) {
-        phoneCam.setPipeline(pipeline);
+        webcam.setPipeline(pipeline);
     }
 
-    public void start(boolean showData) {
-        phoneCam.showFpsMeterOnViewport(showData);
-        /*
-         * We use the most verbose version of #startStreaming(), which allows us to specify whether we want to use double
-         * (default) or single buffering. See the JavaDoc for this method for more details
-         */
-        phoneCam.startStreaming(
-                320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-    }   
-
     public void start() {
-        start(false);
+        return;
     }
 
     public void addTracker(OpenCvTracker tracker) {
@@ -109,6 +168,6 @@ public class OpenCVPipelineRunner {
     }
 
     public void close() {
-        phoneCam.stopStreaming();
+        webcam.stopStreaming();
     }
 }

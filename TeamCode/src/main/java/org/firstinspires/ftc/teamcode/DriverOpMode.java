@@ -17,8 +17,9 @@ public class DriverOpMode extends LinearOpMode {
 
         waitForStart();
 
-        Debouncer debouncer = new Debouncer(.2);
-        Debouncer psxDebouncer = new Debouncer(.2);
+        Debouncer carouselDeboucer = new Debouncer(.1);
+        ToggleButton toggle = new ToggleButton(true);
+        double rampTime = 0.3;
 
         while (opModeIsActive()) {
             robot.handleGamepads(gamepad1, gamepad2);
@@ -74,10 +75,12 @@ public class DriverOpMode extends LinearOpMode {
                 robot.arm.setPosition(robot.arm.TOP_LEVEL);
             }
 
-            if (gamepad1.left_bumper) {
-                robot.startSpinnerOther();
+            if (carouselDeboucer.isPressed(gamepad1.left_bumper)) {
+                robot.startRampProgram(rampTime);
+                rampTime+=0.1;
             } else {
                 robot.stopSpinner();
+                rampTime = 0.3;
             }
             if (gamepad1.right_bumper) {
                 robot.startSpinner();
@@ -85,16 +88,17 @@ public class DriverOpMode extends LinearOpMode {
                 robot.stopSpinner();
             }
 
-            if (debouncer.isPressed(gamepad1.a) || psxDebouncer.isPressed(gamepad2.a)) {
-                robot.arm.gripper.toggle();
-            }
-            if (debouncer.isPressed(gamepad1.b)) {
-                robot.arm.wrist.setPosition(.5);
+            if (toggle.checkButton(gamepad2.a)) {
+                robot.arm.gripper.open();
+            } else {
+                robot.arm.gripper.close();
             }
 
             telemetry.addData("Arm (deg)", robot.arm.armPosition);
             telemetry.addData("Arm (deg) (current): ", robot.arm.arm.getCurrentPosition()/12);
-            telemetry.addData("Wrist (Deg): ", robot.arm.wrist.getPosition());
+            telemetry.addData("Wrist (Deg): ", robot.arm.wristLeft.getPosition());
+            telemetry.addData("Data", robot.plateSpinner.getPower());
+            telemetry.addData("ButtonLocker:", toggle.toString());
             telemetry.update();
         }
 

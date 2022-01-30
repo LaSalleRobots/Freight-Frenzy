@@ -37,8 +37,6 @@ import java.util.ArrayList;
 @TeleOp
 public class AprilTagDemo extends LinearOpMode
 {
-    OpenCvWebcam camera;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -75,9 +73,9 @@ public class AprilTagDemo extends LinearOpMode
             // If there's been a new frame...
             if(detections != null)
             {
-                telemetry.addData("FPS", camera.getFps());
-                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
-                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+                telemetry.addData("FPS", pipelineRunner.webcam.getFps());
+                telemetry.addData("Overhead ms", pipelineRunner.webcam.getOverheadTimeMs());
+                telemetry.addData("Pipeline ms", pipelineRunner.webcam.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)

@@ -62,6 +62,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
     double tagsize;
     double tagsizeX;
     double tagsizeY;
+    Point center = null;
 
     private float decimation;
     private boolean needToSetDecimation;
@@ -136,7 +137,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
         }
 
         if (detections.size() > 0) {
-            Point center = detections.get(0).center;
+            center = detections.get(0).center;
             if (center.x < input.width()/3) {
                 position = Position.Left;
             } else if (center.x > input.width()*2/3) {
@@ -157,7 +158,6 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }*/
-
         return input;
     }
 

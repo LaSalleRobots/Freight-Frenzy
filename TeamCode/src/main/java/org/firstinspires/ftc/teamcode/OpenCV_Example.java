@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.openftc.easyopencv.OpenCvTracker;
+
 @Autonomous(name = "OpenCV Example", group = "AI/CV Concepts")
 public class OpenCV_Example extends LinearOpMode {
 
@@ -13,11 +15,10 @@ public class OpenCV_Example extends LinearOpMode {
 
         waitForStart();
 
-        runner.start();
         while (opModeIsActive()) {
-            telemetry.addData("FPS", runner.phoneCam.getFps());
-            telemetry.addData("Pipeline (ms)", runner.phoneCam.getPipelineTimeMs());
-            telemetry.addData("Total Frame time (ms)", runner.phoneCam.getTotalFrameTimeMs());
+            telemetry.addData("FPS", runner.webcam.getFps());
+            telemetry.addData("Pipeline (ms)", runner.webcam.getPipelineTimeMs());
+            telemetry.addData("Total Frame time (ms)", runner.webcam.getTotalFrameTimeMs());
             /*telemetry.addData(
                     "W, H (px)",
                     teamElementTracker.bounds.size.width + ", " + teamElementTracker.bounds.size.height);

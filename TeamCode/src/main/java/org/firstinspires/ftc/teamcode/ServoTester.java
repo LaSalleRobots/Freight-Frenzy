@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo test = hardwareMap.get(Servo.class, "servotest");
+        Servo test = hardwareMap.get(Servo.class, "wrist");
         Debouncer debouncer = new Debouncer(.2);
         int pos = 0;
 

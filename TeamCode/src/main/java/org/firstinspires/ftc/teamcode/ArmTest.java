@@ -20,7 +20,7 @@ public class ArmTest extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addData("Arm (deg)", arm.armPosition);
             telemetry.addData("Arm (deg) (current): ", arm.arm.getCurrentPosition()/12);
-            telemetry.addData("Wrist (Deg): ", arm.wrist.getPosition()*180);
+            telemetry.addData("Wrist (Deg): ", arm.wristLeft.getPosition()*180);
             telemetry.update();
         }
         sleep(20*1000);

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class MecanumDrive {
 
     public double speed = 1;
+    private  double oldSpeed = 1;
 
     private static final double FRICTION_COEF = 1.75;
     private double flP = 0;
@@ -204,4 +205,15 @@ public class MecanumDrive {
         return this;
     }
 
+
+    public MecanumDrive startSlowMode(double speed) {
+        this.oldSpeed = this.speed;
+        this.speed = speed;
+        return this;
+    }
+
+    public MecanumDrive endSlowMode() {
+        this.speed = this.oldSpeed;
+        return this;
+    }
 }

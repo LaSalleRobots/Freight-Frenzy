@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Full Auto Red (left): CAM", group = "AI")
-public class AIRedLeftAuto extends LinearOpMode {
+@Autonomous(name = "Full Auto Red (left-delayed): CAM", group = "AI")
+public class AIRedLeftDelayedAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime runtime = new ElapsedTime();
@@ -19,7 +18,7 @@ public class AIRedLeftAuto extends LinearOpMode {
 
         waitForStart();
         robot.arm.gripper.close();
-        robot.sleep(3);
+        robot.sleep(3+6.5);
         AprilTagDetectionPipeline.Position position = aprilTagDetectionPipeline.getPosition();
 
         if (position == AprilTagDetectionPipeline.Position.Left) {

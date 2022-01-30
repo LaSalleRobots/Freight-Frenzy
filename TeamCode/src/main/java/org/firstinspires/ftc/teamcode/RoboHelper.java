@@ -18,7 +18,7 @@ public class RoboHelper {
 
     private final ElapsedTime runtime;
 
-	private final DcMotor plateSpinner;
+	public final DcMotor plateSpinner;
 
     public Arm arm;
 
@@ -104,6 +104,11 @@ public class RoboHelper {
         return orientation.firstAngle;
     }
 
+    public RoboHelper startRampProgram(double iter) {
+        this.plateSpinner.setPower(-iter);
+        return this;
+    }
+
 	public RoboHelper startSpinner() {
 		this.plateSpinner.setPower(1);
 		return this;
@@ -115,12 +120,12 @@ public class RoboHelper {
     }
 
     public RoboHelper startSpinner(boolean auto) {
-        this.plateSpinner.setPower(0.7);
+        this.plateSpinner.setPower(0.5);
         return this;
     }
 
     public RoboHelper startSpinnerOther(boolean auto) {
-        this.plateSpinner.setPower(-0.7);
+        this.plateSpinner.setPower(-0.5);
         return this;
     }
 

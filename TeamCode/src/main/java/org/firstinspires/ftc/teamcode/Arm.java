@@ -14,7 +14,8 @@ public class Arm {
 
     public Gripper gripper;
 
-    public final Servo wrist;
+    public final Servo wristRight;
+    public final Servo wristLeft;
     public final DcMotor arm;
     public Debouncer wristServoDeb = new Debouncer(.0166);
 
@@ -30,7 +31,8 @@ public class Arm {
 
 
         // Setup Servos
-        this.wrist = hardwareMap.get(Servo.class, "wrist");
+        this.wristRight = hardwareMap.get(Servo.class, "wristRight");
+        this.wristLeft = hardwareMap.get(Servo.class, "wristLeft");
 
         // Setup Encoders
         this.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -65,9 +67,11 @@ public class Arm {
     public void updateWrist() {
         if (wristServoDeb.isPressed(true)) {
             if (this.armPosition > 130) {
-                this.wrist.setPosition(20.0/180);
+                this.wristRight.setPosition(20.0/180);
+                this.wristLeft.setPosition(160.0/180);
             } else {
-                this.wrist.setPosition((this.armPosition-20)/180);
+                this.wristRight.setPosition((this.armPosition-20)/180);
+                this.wristLeft.setPosition((180-(this.armPosition-20))/180);
             }
 
         }
