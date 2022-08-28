@@ -1,3 +1,8 @@
+# Check out our highest point (238) match from this season 
+[Here on youtube](https://youtu.be/QlJwNJ_k3TU?t=12588)
+
+
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
